@@ -1,6 +1,6 @@
 # 招标数据分布式采集系统 (Bid Data Distributed Scraper)
 
-基于 Scrapy-Redis 的分布式爬虫系统，目前用于采集吉林省公共资源交易信息（政府采购）。
+基于 Scrapy-Redis 的分布式爬虫系统，目前用于采集某省公共资源交易信息（政府采购）。
 
 ## 功能特性
 

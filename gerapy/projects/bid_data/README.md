@@ -1,6 +1,6 @@
 # 招标数据分布式采集系统 (Bid Data Distributed Scraper)
 
-基于 Scrapy-Redis 的分布式爬虫系统，目前用于采集吉林省公共资源交易信息（政府采购）。
+基于 Scrapy-Redis 的分布式爬虫系统，目前用于采集某省公共资源交易信息（政府采购）。
 
 ## 功能特性
 
@@ -139,4 +139,18 @@ jdbc:mysql://localhost:3307/bid_data?useUnicode=true&characterEncoding=utf8mb4&s
 - `schema.sql`: 数据库初始化脚本。
 - `llm_processor.py`: LLM 数据解析脚本。
 - `gerapy/`: Gerapy 数据存储目录。
+- `gerapy/`: Gerapy 数据存储目录。
 - `scrapyd.conf`: Scrapyd 配置文件。
+
+## 反爬策略配置 (Anti-Crawling)
+
+系统已内置反爬策略，如需启用代理 IP 池，请在 `docker-compose.yml` 中配置环境变量：
+
+```yaml
+  scrapyd:
+    environment:
+      - PROXY_API_URL=http://your-proxy-pool-api/get  # 设置代理获取地址
+```
+
+- **随机延迟**: 默认开启 3 秒随机延迟。
+- **IP 代理**: 配置上述变量后，系统会自动请求代理 IP 并用于采集。
