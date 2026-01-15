@@ -1,0 +1,9 @@
+scrapy>=2.11.0
+scrapy-redis>=0.7.3
+mysql-connector-python>=8.0.0
+pymysql>=1.0.0
+# For potential extensive js handling if needed, but we use API so requests/scrapy is enough.
+requests
+scrapyd>=1.4.0
+gerapy>=0.9.11
+scrapyd-client>=1.2.3

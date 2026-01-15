@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bid_data
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --protected-mode no
+    volumes:
+      - redis_data:/data
+
+  scrapyd:
+    build: .
+    container_name: scrapyd
+    restart: always
+    ports:
+      - "6800:6800"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+    volumes:
+      - ./downloads:/app/downloads
+      - .:/app
+      - ./scrapyd.conf:/etc/scrapyd/scrapyd.conf
+    command: scrapyd
+
+  gerapy:
+    build: .
+    container_name: gerapy
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - scrapyd
+      - redis
+    volumes:
+      - ./gerapy:/app/gerapy
+    command: >
+      sh -c "
+        if [ ! -f /app/gerapy/dbs/db.sqlite3 ]; then 
+          gerapy init; 
+          cd gerapy; 
+          gerapy migrate; 
+          gerapy initadmin; 
+        else 
+          cd gerapy; 
+          gerapy migrate; 
+        fi; 
+        gerapy runserver 0.0.0.0:8000
+      "
+
+volumes:
+  mysql_data:
+  redis_data:
