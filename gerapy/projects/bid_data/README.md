@@ -150,7 +150,8 @@ jdbc:mysql://localhost:3307/bid_data?useUnicode=true&characterEncoding=utf8mb4&s
   scrapyd:
     environment:
       - PROXY_API_URL=http://your-proxy-pool-api/get  # 设置代理获取地址
+      - PROXY_ENABLED=true  # 设置为 true 开启代理，默认 false 关闭
 ```
 
-- **随机延迟**: 默认开启 3 秒随机延迟。
-- **IP 代理**: 配置上述变量后，系统会自动请求代理 IP 并用于采集。
+- **随机延迟**: 默认开启 2 秒随机延迟。
+- **IP 代理**: 也就是资源池功能。需配置 `PROXY_ENABLED=true` 才会生效。

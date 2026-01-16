@@ -37,11 +37,12 @@ MYSQL_CONFIG = {
 }
 
 # Request settings
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 2
 RANDOMIZE_DOWNLOAD_DELAY = True
 
 # Proxy Configuration
 PROXY_API_URL = os.getenv('PROXY_API_URL', '')  # e.g., http://proxypool:5555/random
+PROXY_ENABLED = os.getenv('PROXY_ENABLED', 'false').lower() == 'true'
 
 DOWNLOADER_MIDDLEWARES = {
     'bid_scraper.middlewares.RandomProxyMiddleware': 100,
