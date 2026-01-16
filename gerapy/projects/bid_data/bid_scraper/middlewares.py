@@ -104,18 +104,20 @@ import requests
 import logging
 
 class RandomProxyMiddleware:
-    def __init__(self, proxy_api_url):
+    def __init__(self, proxy_api_url, enabled=False):
         self.proxy_api_url = proxy_api_url
+        self.enabled = enabled
         self.logger = logging.getLogger(__name__)
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            proxy_api_url=crawler.settings.get('PROXY_API_URL')
+            proxy_api_url=crawler.settings.get('PROXY_API_URL'),
+            enabled=crawler.settings.getbool('PROXY_ENABLED')
         )
 
     def process_request(self, request, spider):
-        if not self.proxy_api_url:
+        if not self.enabled or not self.proxy_api_url:
             return None
 
         # Ignore if proxy is already set

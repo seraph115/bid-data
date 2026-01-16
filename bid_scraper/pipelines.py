@@ -55,6 +55,13 @@ class MysqlPipeline:
         self.conn.commit()
         record_id = self.cursor.lastrowid
         
+        # If record was updated (or lastrowid is 0), fetch ID by URL
+        if not record_id:
+            self.cursor.execute("SELECT id FROM bid_records WHERE url = %s", (item.get('url'),))
+            result = self.cursor.fetchone()
+            if result:
+                record_id = result[0]
+        
         # Insert Attachments
         if item.get('files'):
             for f in item.get('files'):

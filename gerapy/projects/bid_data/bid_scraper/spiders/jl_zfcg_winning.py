@@ -70,7 +70,8 @@ class JlZfcgWinningSpider(scrapy.Spider):
             body=json.dumps(payload), 
             headers={'Content-Type':'application/json'}, 
             callback=self.parse_list, 
-            meta={'payload': payload}
+            meta={'payload': payload},
+            dont_filter=True
         )
 
     def parse_list(self, response):
@@ -110,7 +111,8 @@ class JlZfcgWinningSpider(scrapy.Spider):
                 body=json.dumps(payload), 
                 headers={'Content-Type':'application/json'}, 
                 callback=self.parse_list, 
-                meta={'payload': payload}
+                meta={'payload': payload},
+                dont_filter=True
             )
 
     def parse_detail(self, response):

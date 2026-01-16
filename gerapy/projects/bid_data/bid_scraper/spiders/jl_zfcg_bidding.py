@@ -67,7 +67,8 @@ class JlZfcgBiddingSpider(scrapy.Spider):
             body=json.dumps(payload), 
             headers={'Content-Type':'application/json'}, 
             callback=self.parse_list, 
-            meta={'payload': payload}
+            meta={'payload': payload},
+            dont_filter=True
         )
 
     def parse_list(self, response):
@@ -96,10 +97,16 @@ class JlZfcgBiddingSpider(scrapy.Spider):
         current_page = pager.get('pageNo')
         total_page = pager.get('pageCount')
         
+        self.logger.info(f"Pagination Debug: Current Page: {current_page}, Total Pages: {total_page}")
+
         if current_page and total_page and current_page < total_page:
             next_page = current_page + 1
-            payload = response.meta['payload']
+            # Deep copy payload to ensure safety
+            import copy
+            payload = copy.deepcopy(response.meta['payload'])
             payload['pageNo'] = next_page
+            
+            self.logger.info(f"Yielding Next Page: {next_page}")
             
             yield scrapy.Request(
                 response.url, 
@@ -107,7 +114,8 @@ class JlZfcgBiddingSpider(scrapy.Spider):
                 body=json.dumps(payload), 
                 headers={'Content-Type':'application/json'}, 
                 callback=self.parse_list, 
-                meta={'payload': payload}
+                meta={'payload': payload},
+                dont_filter=True
             )
 
     def parse_detail(self, response):
